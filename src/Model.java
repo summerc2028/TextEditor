@@ -11,6 +11,7 @@ public class Model {
 	private String buffer;
 	private boolean insert;
 	private boolean updated;
+	public String searchText;
 	
 	public Model()
 	{
