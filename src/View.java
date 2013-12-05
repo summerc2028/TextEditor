@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -46,17 +47,28 @@ public class View extends JFrame implements ActionListener {
         this.area = new JTextArea(20, 50);
 
         // button
-        this.newB = new JButton("pic/new.gif");
-        this.openB = new JButton("pic/open.gif");
-        this.saveB = new JButton("pic/save.gif");
-        this.saveAsB = new JButton("pic/saveAs.gif");
-        this.copyB = new JButton("pic/copy.gif");
-        this.pasteB = new JButton("pic/paste.gif");
-        this.cutB = new JButton("pic/cut.gif");
-        this.selectAllB = new JButton("pic/selectAll.gif");
-        this.changeColor = new JButton("pic/changeColor");
-        this.undoB = new JButton("pic/undo");
-        this.redoB = new JButton("pic/redo");
+        ImageIcon icon = new ImageIcon("image/new.jpg");
+        this.newB = new JButton(icon);
+        icon = new ImageIcon("image/open.jpg");
+        this.openB = new JButton(icon);
+        icon = new ImageIcon("image/save.jpg");
+        this.saveB = new JButton(icon);
+        icon = new ImageIcon("image/saveAs.jpg");
+        this.saveAsB = new JButton(icon);
+        icon = new ImageIcon("image/copy.jpg");
+        this.copyB = new JButton(icon);
+        icon = new ImageIcon("image/paste.jpg");
+        this.pasteB = new JButton(icon);
+        icon = new ImageIcon("image/cut.jpg");
+        this.cutB = new JButton(icon);
+        icon = new ImageIcon("image/selectAll.jpg");
+        this.selectAllB = new JButton(icon);
+        icon = new ImageIcon("image/changeColor.jpg");
+        this.changeColor = new JButton(icon);
+        icon = new ImageIcon("image/undo.jpg");
+        this.undoB = new JButton(icon);
+        icon = new ImageIcon("image/redo.jpg");
+        this.redoB = new JButton(icon);
 
         String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
