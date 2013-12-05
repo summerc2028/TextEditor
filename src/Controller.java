@@ -125,8 +125,6 @@ public class Controller {
     }
     
     public void redo() {
-
-    	System.out.println(model.redoStack);
     	if (!model.hasRedo()) return;
     	UndoUnit u = model.getLastestRedo();
     	if (u.type.equals(EventType.REMOVE)){
