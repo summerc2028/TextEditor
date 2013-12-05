@@ -18,6 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentEvent.EventType;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 public class Controller {
     private final View view;
@@ -26,6 +31,7 @@ public class Controller {
     public Controller(View view, Model model) {
         this.view = view;
         this.model = model;
+        view.area.getDocument().addDocumentListener(new MyDocumentListener());
     }
 
     public void newAction() {
@@ -95,6 +101,27 @@ public class Controller {
     public void searchAction() {
         new MyJDialog();
     }
+    
+    public void undo() {
+    	if (!model.hasUndo()) return;
+    	UndoUnit u = model.getLastestUndo();
+    	if (u.type.equals(EventType.REMOVE)){
+        	view.area.insert(u.change, u.pos);
+        	if (model.hasUndo()) model.getLastestUndo();
+    	}
+    	else if (u.type.equals(EventType.INSERT)) {
+    		String newText = model.oldText.substring(0, u.pos) + (model.oldText.substring(u.pos + u.length, model.oldText.length()));
+    		view.area.setText(newText);
+        	model.getLastestUndo();
+        	if (newText.length() > 0) model.getLastestUndo();
+    	}
+    	try {
+			model.updateText(view.area.getDocument().getText(0, view.area.getDocument().getLength()));
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
+		
+    }
 
     private void saveFileAs() {
         if (this.view.dialog.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -135,7 +162,38 @@ public class Controller {
         } catch (IOException e) {
         }
     }
-
+    
+    class MyDocumentListener implements DocumentListener {
+        private void updateUndoStack(DocumentEvent e) {
+        	if (e.getType().equals(EventType.INSERT)) {
+        		try {
+        			model.updateUndo(e.getType(), e.getOffset(), e.getLength(), e.getDocument().getText(e.getOffset(), e.getLength()));
+        		} catch (BadLocationException e1) {
+        			e1.printStackTrace();
+        		}
+        	}
+        	else if (e.getType().equals(EventType.REMOVE)) {
+        		model.updateUndo(e.getType(), e.getOffset(), e.getLength(), model.oldText.substring(e.getOffset(), e.getLength() + e.getOffset()));
+        	}
+        	try {
+				model.updateText(e.getDocument().getText(0, e.getDocument().getLength()));
+			} catch (BadLocationException e1) {
+				e1.printStackTrace();
+			}
+        }
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			updateUndoStack(e);
+		}
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			updateUndoStack(e);
+		}
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			updateUndoStack(e);
+		}
+    } 
     class MyJDialog extends JDialog implements ActionListener {
         private final JTextField jte1;
         private final JButton jbu = new JButton("Find next");

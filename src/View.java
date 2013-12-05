@@ -25,7 +25,7 @@ public class View extends JFrame implements ActionListener {
     public JTextArea area;
     public JPanel tools;
     private final JButton newB, openB, saveB, saveAsB, copyB, pasteB, cutB,
-            selectAllB, changeColor;
+            selectAllB, changeColor, undoB;
 
     private final JMenuItem newM, openM, saveM, saveAsM, quitM, copyM, pasteM,
             cutM, selectAllM, searchM;
@@ -52,7 +52,8 @@ public class View extends JFrame implements ActionListener {
         this.pasteB = new JButton("pic/paste.gif");
         this.cutB = new JButton("pic/cut.gif");
         this.selectAllB = new JButton("pic/selectAll.gif");
-        this.changeColor = new JButton("change color");
+        this.changeColor = new JButton("pic/changeColor");
+        this.undoB = new JButton("pic/undo");
 
         String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
@@ -70,6 +71,7 @@ public class View extends JFrame implements ActionListener {
         tool.add(this.pasteB);
         tool.add(this.cutB);
         tool.add(this.selectAllB);
+        tool.add(this.undoB);
         // tool.add(this.changeColor);
         // this.add(tool, BorderLayout.NORTH);
         JToolBar tool2 = new JToolBar();
@@ -88,6 +90,7 @@ public class View extends JFrame implements ActionListener {
         this.pasteB.addActionListener(this);
         this.cutB.addActionListener(this);
         this.selectAllB.addActionListener(this);
+        this.undoB.addActionListener(this);
         this.changeColor.addActionListener(this);
         this.fn.addActionListener(this);
         this.fnsz.addActionListener(this);
@@ -187,6 +190,8 @@ public class View extends JFrame implements ActionListener {
             this.controller.searchAction();
         } else if (source == this.fn || source == this.fnsz) {
             this.controller.setFont();
+        } else if (source == this.undoB) {
+        	this.controller.undo();
         }
 
         this.setCursor(Cursor.getDefaultCursor());
