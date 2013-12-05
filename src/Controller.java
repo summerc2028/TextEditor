@@ -105,9 +105,10 @@ public class Controller {
     public void undo() {
     	if (!model.hasUndo()) return;
     	UndoUnit u = model.getLastestUndo();
+    	model.updateRedo(u);
     	if (u.type.equals(EventType.REMOVE)){
         	view.area.insert(u.change, u.pos);
-        	if (model.hasUndo()) model.getLastestUndo();
+        	model.getLastestUndo();
     	}
     	else if (u.type.equals(EventType.INSERT)) {
     		String newText = model.oldText.substring(0, u.pos) + (model.oldText.substring(u.pos + u.length, model.oldText.length()));
@@ -121,6 +122,25 @@ public class Controller {
 			e1.printStackTrace();
 		}
 		
+    }
+    
+    public void redo() {
+
+    	System.out.println(model.redoStack);
+    	if (!model.hasRedo()) return;
+    	UndoUnit u = model.getLastestRedo();
+    	if (u.type.equals(EventType.REMOVE)){
+    		String newText = model.oldText.substring(0, u.pos) + (model.oldText.substring(u.pos + u.length, model.oldText.length()));
+    		view.area.setText(newText);
+    	}
+    	else if (u.type.equals(EventType.INSERT)) {
+        	view.area.insert(u.change, u.pos);
+    	}
+    	try {
+			model.updateText(view.area.getDocument().getText(0, view.area.getDocument().getLength()));
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
     }
 
     private void saveFileAs() {

@@ -14,6 +14,7 @@ public class Model {
 	public boolean changed;
 	public String searchText;
 	Deque<UndoUnit> undoStack;
+	public Deque<UndoUnit> redoStack;
 	public String oldText;
 	
 	public Model()
@@ -21,6 +22,7 @@ public class Model {
 		currentFile = "Untitled";
 		changed = false;
 		undoStack = new ArrayDeque<UndoUnit>();
+		redoStack = new ArrayDeque<UndoUnit>();
 		oldText = "";
 	}
 	public void updateText(String s)
@@ -34,13 +36,28 @@ public class Model {
 		undoStack.push(u);
 	}
 	
+	public void updateRedo(UndoUnit u)
+	{
+		redoStack.push(u);
+	}
+	
 	public boolean hasUndo()
 	{
 		return (undoStack.size() > 0);
 	}
 	
+	public boolean hasRedo()
+	{
+		return (redoStack.size() > 0);
+	}
+	
 	public UndoUnit getLastestUndo()
 	{
 		return undoStack.pop();
+	}
+	
+	public UndoUnit getLastestRedo()
+	{
+		return redoStack.pop();
 	}
 }

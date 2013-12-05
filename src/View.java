@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
@@ -25,10 +27,10 @@ public class View extends JFrame implements ActionListener {
     public JTextArea area;
     public JPanel tools;
     private final JButton newB, openB, saveB, saveAsB, copyB, pasteB, cutB,
-            selectAllB, changeColor, undoB;
+            selectAllB, changeColor, undoB, redoB;
 
     private final JMenuItem newM, openM, saveM, saveAsM, quitM, copyM, pasteM,
-            cutM, selectAllM, searchM;
+            cutM, selectAllM, searchM, undoM, redoM;
 
     public final JComboBox fn, fnsz;
     private Controller controller;
@@ -54,6 +56,7 @@ public class View extends JFrame implements ActionListener {
         this.selectAllB = new JButton("pic/selectAll.gif");
         this.changeColor = new JButton("pic/changeColor");
         this.undoB = new JButton("pic/undo");
+        this.redoB = new JButton("pic/redo");
 
         String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
@@ -72,6 +75,7 @@ public class View extends JFrame implements ActionListener {
         tool.add(this.cutB);
         tool.add(this.selectAllB);
         tool.add(this.undoB);
+        tool.add(this.redoB);
         // tool.add(this.changeColor);
         // this.add(tool, BorderLayout.NORTH);
         JToolBar tool2 = new JToolBar();
@@ -91,6 +95,7 @@ public class View extends JFrame implements ActionListener {
         this.cutB.addActionListener(this);
         this.selectAllB.addActionListener(this);
         this.undoB.addActionListener(this);
+        this.redoB.addActionListener(this);
         this.changeColor.addActionListener(this);
         this.fn.addActionListener(this);
         this.fnsz.addActionListener(this);
@@ -129,7 +134,13 @@ public class View extends JFrame implements ActionListener {
         edit.add(this.selectAllM);
         this.searchM = new JMenuItem("Search");
         edit.add(this.searchM);
-
+        this.undoM = new JMenuItem("Undo");
+        undoM.setAccelerator(KeyStroke.getKeyStroke('Z', KeyEvent.CTRL_DOWN_MASK));
+        edit.add(undoM);
+        this.redoM = new JMenuItem("Redo");
+        redoM.setAccelerator(KeyStroke.getKeyStroke('Y', KeyEvent.CTRL_DOWN_MASK));
+        edit.add(redoM);
+        
         this.newM.addActionListener(this);
         this.openM.addActionListener(this);
         this.saveM.addActionListener(this);
@@ -140,6 +151,8 @@ public class View extends JFrame implements ActionListener {
         this.cutM.addActionListener(this);
         this.selectAllM.addActionListener(this);
         this.searchM.addActionListener(this);
+        this.undoM.addActionListener(this);
+        this.redoM.addActionListener(this);
 
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -190,8 +203,10 @@ public class View extends JFrame implements ActionListener {
             this.controller.searchAction();
         } else if (source == this.fn || source == this.fnsz) {
             this.controller.setFont();
-        } else if (source == this.undoB) {
+        } else if (source == this.undoB || source == this.undoM) {
         	this.controller.undo();
+        } else if (source == this.redoB || source == this.redoM) {
+        	this.controller.redo();
         }
 
         this.setCursor(Cursor.getDefaultCursor());
