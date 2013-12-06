@@ -14,7 +14,7 @@ public class Model {
 	public boolean changed;
 	public String searchText;
 	Deque<UndoUnit> undoStack;
-	public Deque<UndoUnit> redoStack;
+	Deque<UndoUnit> redoStack;
 	public String oldText;
 	
 	public Model()
@@ -59,5 +59,11 @@ public class Model {
 	public UndoUnit getLastestRedo()
 	{
 		return redoStack.pop();
+	}
+	
+	public void initializeStacks()
+	{
+		undoStack.clear();
+		redoStack.clear();
 	}
 }

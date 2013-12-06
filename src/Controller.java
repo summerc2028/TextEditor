@@ -43,6 +43,7 @@ public class Controller {
 
         this.model.currentFile = "Untitled";
         this.view.area.setText("");
+        this.model.initializeStacks();
     }
 
     public void openAction() {
